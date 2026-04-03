@@ -1,0 +1,253 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== PRODUCTS =====
+
+model Product {
+  id              Int               @id @default(autoincrement())
+  slug            String            @unique
+  title           String
+  description     String?
+  type            ProductType
+  platform        Platform?
+  edition         String?
+  region          Region
+  regionProductId String?
+  price           Decimal           @db.Decimal(10, 2)
+  originalPrice   Decimal?          @db.Decimal(10, 2)
+  discount        Int?
+  imageUrl        String?
+  isPreorder      Boolean           @default(false)
+  isAvailable     Boolean           @default(true)
+  sortOrder       Int               @default(0)
+  searchVector    Unsupported("tsvector")?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  categories    ProductCategory[]
+  orderItems    OrderItem[]
+  wishlistItems WishlistItem[]
+
+  @@index([isAvailable, region, type])
+  @@index([slug])
+}
+
+enum ProductType {
+  GAME
+  SUBSCRIPTION
+  TOPUP_CARD
+  DONATE
+  ACCOUNT
+}
+
+enum Platform {
+  PS4
+  PS5
+  PS4_PS5
+}
+
+enum Region {
+  TURKEY
+  INDIA
+  UKRAINE
+}
+
+// ===== CATEGORIES =====
+
+model Category {
+  id        Int               @id @default(autoincrement())
+  slug      String            @unique
+  name      String
+  type      CategoryType
+  sortOrder Int               @default(0)
+  isActive  Boolean           @default(true)
+  products  ProductCategory[]
+}
+
+enum CategoryType {
+  GENRE
+  COLLECTION
+  PUBLISHER
+  FEATURE
+}
+
+model ProductCategory {
+  productId  Int
+  categoryId Int
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+}
+
+// ===== TOP-UP CODES =====
+
+model TopUpCode {
+  id           Int        @id @default(autoincrement())
+  code         String     @unique
+  denomination Decimal    @db.Decimal(10, 2)
+  currency     Currency
+  status       CodeStatus @default(AVAILABLE)
+  orderId      Int?
+  order        Order?     @relation(fields: [orderId], references: [id])
+  createdAt    DateTime   @default(now())
+  usedAt       DateTime?
+
+  @@index([status, currency, denomination])
+}
+
+enum Currency {
+  TRY
+  INR
+  UAH
+}
+
+enum CodeStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+  EXPIRED
+}
+
+// ===== USERS =====
+
+model User {
+  id         Int            @id @default(autoincrement())
+  email      String         @unique
+  password   String?
+  phone      String?
+  telegramId String?        @unique
+  name       String?
+  role       UserRole       @default(CUSTOMER)
+  createdAt  DateTime       @default(now())
+  orders     Order[]
+  wishlist   WishlistItem[]
+}
+
+enum UserRole {
+  CUSTOMER
+  MANAGER
+  ADMIN
+}
+
+model WishlistItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+// ===== ORDERS =====
+
+model Order {
+  id            Int           @id @default(autoincrement())
+  orderNumber   String        @unique
+  userId        Int?
+  user          User?         @relation(fields: [userId], references: [id])
+  status        OrderStatus   @default(PENDING)
+  customerEmail String
+  customerPhone String?
+  customerTg    String?
+  needsAccount  Boolean       @default(false)
+  accountRegion Region?
+  totalAmount   Decimal       @db.Decimal(10, 2)
+  paymentMethod PaymentMethod @default(SBP)
+  paymentId     String?
+  paymentUrl    String?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  paidAt        DateTime?
+  deliveredAt   DateTime?
+  items         OrderItem[]
+  codes         TopUpCode[]
+
+  @@index([status, createdAt])
+  @@index([customerEmail])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  SBP
+  CARD
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int     @default(1)
+  price     Decimal @db.Decimal(10, 2)
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+// ===== EXCHANGE RATES =====
+
+model ExchangeRate {
+  id        Int      @id @default(autoincrement())
+  currency  Currency @unique
+  rateToRub Decimal  @db.Decimal(10, 4)
+  margin    Decimal  @db.Decimal(5, 2)
+  updatedAt DateTime @updatedAt
+}
+
+// ===== CONTENT =====
+
+model Page {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
+  title     String
+  content   String
+  updatedAt DateTime @updatedAt
+}
+
+model FAQ {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+}
+
+model Banner {
+  id        Int       @id @default(autoincrement())
+  title     String
+  imageUrl  String
+  linkUrl   String?
+  position  String
+  isActive  Boolean   @default(true)
+  sortOrder Int       @default(0)
+  startDate DateTime?
+  endDate   DateTime?
+}
+
+model PromoCode {
+  id          Int       @id @default(autoincrement())
+  code        String    @unique
+  discountPct Int?
+  discountAmt Decimal?  @db.Decimal(10, 2)
+  maxUses     Int?
+  usedCount   Int       @default(0)
+  isActive    Boolean   @default(true)
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+}
