@@ -3,9 +3,13 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true, // needed for webhook signature verification
+  });
 
   app.use(helmet());
   app.enableCors({
@@ -13,6 +17,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.setGlobalPrefix('api');
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -20,6 +25,12 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  // Global exception filter
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Global transform interceptor
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
@@ -34,5 +45,6 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT || 3001);
   console.log(`API running on: http://localhost:${process.env.PORT || 3001}/api`);
+  console.log(`Swagger docs: http://localhost:${process.env.PORT || 3001}/api/docs`);
 }
 bootstrap();
