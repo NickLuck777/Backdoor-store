@@ -2,16 +2,26 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { CartItem, ProductDto } from '@/types';
+import type { CartItem, ProductDto, SmartCartResult } from '@/types';
+
+function generateSessionId(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
 
 interface CartStore {
   items: CartItem[];
   isOpen: boolean;
+  sessionId: string;
+  smartCartResult: SmartCartResult | null;
   addItem: (product: ProductDto) => void;
   removeItem: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
   toggleCart: () => void;
+  setSmartCartResult: (result: SmartCartResult | null) => void;
   totalCount: () => number;
   totalPrice: () => number;
 }
@@ -21,6 +31,11 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
       isOpen: false,
+      sessionId: generateSessionId(),
+      smartCartResult: null,
+
+      setSmartCartResult: (result: SmartCartResult | null) =>
+        set({ smartCartResult: result }),
 
       addItem: (product: ProductDto) => {
         const existing = get().items.find((i) => i.productId === product.id);
@@ -74,7 +89,7 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: 'reloc-cart',
-      partialize: (state) => ({ items: state.items }),
+      partialize: (state) => ({ items: state.items, sessionId: state.sessionId }),
     },
   ),
 );
