@@ -17,6 +17,7 @@ import { UsersModule } from './users/users.module';
 import { AdminModule } from './admin/admin.module';
 import { PaymentsModule } from './payments/payments.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
+import { ContactModule } from './contact/contact.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { ThrottlerGuard } from '@nestjs/throttler';
@@ -61,6 +62,7 @@ import { PromoController } from './pages/promo.controller';
     AdminModule,
     PaymentsModule,
     WebhooksModule,
+    ContactModule,
   ],
   controllers: [PromoController],
   providers: [
