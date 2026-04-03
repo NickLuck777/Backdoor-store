@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+.next/
+out/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
+
+# Prisma
+apps/api/prisma/migrations/**/migration.sql
+# Keep migrations directory
+!apps/api/prisma/migrations/
+
+# Testing
+coverage/
+
+# Docker volumes (not source)
+docker/volumes/
+
+# Claude worktrees
+.claude/worktrees/
