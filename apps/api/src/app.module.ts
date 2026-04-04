@@ -34,15 +34,20 @@ import { PromoController } from './pages/promo.controller';
       useFactory: async (configService: ConfigService) => {
         const redisUrl = configService.get<string>('REDIS_URL');
         if (redisUrl) {
-          const { redisStore } = await import('cache-manager-ioredis-yet');
-          return {
-            store: await redisStore({
-              url: redisUrl,
-            }),
-            ttl: configService.get<number>('CACHE_TTL') ?? 300,
-          };
+          try {
+            const { redisStore } = await import('cache-manager-ioredis-yet');
+            const parsed = new URL(redisUrl);
+            return {
+              store: await redisStore({
+                host: parsed.hostname || 'localhost',
+                port: parseInt(parsed.port || '6379', 10),
+              }),
+              ttl: configService.get<number>('CACHE_TTL') ?? 300,
+            };
+          } catch (e) {
+            console.warn('Redis cache init failed, using in-memory cache:', (e as Error).message);
+          }
         }
-        // Fallback to in-memory cache
         return {
           ttl: configService.get<number>('CACHE_TTL') ?? 300,
         };
