@@ -11,7 +11,7 @@
 | 5 | Checkout step navigation | Cart → "Оформить заказ" | Checkout page shows step 1 |
 | 6 | Contact form validation | Step 2 → enter invalid email → submit | Error message shown, cannot proceed |
 | 7 | Full checkout (mock payment) | Complete all 3 steps → "Оплатить" | Payment processing page shown |
-| 8 | Order success page | Navigate to /order/success?orderNumber=REL-20260404-001 | Success page with codes shown |
+| 8 | Order success page | Navigate to /order/success?orderNumber=BDR-20260404-001 | Success page with codes shown |
 
 ## Info Pages Tests
 

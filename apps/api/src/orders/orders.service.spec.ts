@@ -66,7 +66,7 @@ describe('OrdersService', () => {
   // ---- generateOrderNumber ----
 
   describe('generateOrderNumber (via create)', () => {
-    it('generates REL-YYYYMMDD-NNN format', async () => {
+    it('generates BDR-YYYYMMDD-NNN format', async () => {
       prismaService.product.findMany.mockResolvedValue([mockProduct]);
       prismaService.order.count.mockResolvedValue(0); // first order today
       prismaService.order.create.mockImplementation(({ data }) => ({
@@ -87,11 +87,11 @@ describe('OrdersService', () => {
 
       const callArgs = prismaService.order.create.mock.calls[0][0];
       const orderNumber = callArgs.data.orderNumber;
-      expect(orderNumber).toMatch(/^REL-\d{8}-\d{3}$/);
+      expect(orderNumber).toMatch(/^BDR-\d{8}-\d{3}$/);
 
       // Check date part is today
       const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-      expect(orderNumber).toBe(`REL-${today}-001`);
+      expect(orderNumber).toBe(`BDR-${today}-001`);
     });
 
     it('increments sequence for subsequent orders', async () => {
@@ -114,7 +114,7 @@ describe('OrdersService', () => {
 
       const callArgs = prismaService.order.create.mock.calls[0][0];
       const orderNumber = callArgs.data.orderNumber;
-      expect(orderNumber).toMatch(/^REL-\d{8}-005$/);
+      expect(orderNumber).toMatch(/^BDR-\d{8}-005$/);
     });
   });
 
@@ -225,7 +225,7 @@ describe('OrdersService', () => {
   describe('findOne()', () => {
     it('throws NotFoundException for non-existent order number', async () => {
       prismaService.order.findUnique.mockResolvedValue(null);
-      await expect(service.findOne('REL-20260404-999')).rejects.toThrow(
+      await expect(service.findOne('BDR-20260404-999')).rejects.toThrow(
         NotFoundException,
       );
     });

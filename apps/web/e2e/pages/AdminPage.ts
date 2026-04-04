@@ -3,7 +3,7 @@ import { Page } from '@playwright/test';
 export class AdminPage {
   constructor(private page: Page) {}
 
-  async login(email = 'admin@reloc.ru', password = 'Admin123!') {
+  async login(email = 'admin@backdoor.store', password = 'Admin123!') {
     await this.page.goto('/admin/login');
     await this.page.getByLabel(/email/i).fill(email);
     await this.page.getByLabel(/пароль|password/i).fill(password);

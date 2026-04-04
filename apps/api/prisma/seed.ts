@@ -461,10 +461,10 @@ async function main() {
   console.log('Seeding admin user...');
   const hashedPassword = await bcrypt.hash('Admin123!', 10);
   await prisma.user.upsert({
-    where: { email: 'admin@reloc.ru' },
+    where: { email: 'admin@backdoor.store' },
     update: {},
     create: {
-      email: 'admin@reloc.ru',
+      email: 'admin@backdoor.store',
       password: hashedPassword,
       name: 'Admin',
       role: UserRole.ADMIN,
@@ -529,12 +529,12 @@ async function main() {
     {
       slug: 'about',
       title: 'О нас',
-      content: '<h1>О Reloc Store</h1><p>Reloc Store — ведущий магазин цифровых кодов PlayStation в России. Мы помогаем геймерам покупать игры по выгодным ценам через зарубежные регионы PS Store.</p><p>Наша команда работает 24/7, чтобы обеспечить быструю доставку кодов и отличный сервис.</p>',
+      content: '<h1>О Backdoor Store</h1><p>Backdoor Store — ведущий магазин цифровых кодов PlayStation в России. Мы помогаем геймерам покупать игры по выгодным ценам через зарубежные регионы PS Store.</p><p>Наша команда работает 24/7, чтобы обеспечить быструю доставку кодов и отличный сервис.</p>',
     },
     {
       slug: 'contacts',
       title: 'Контакты',
-      content: '<h1>Контакты</h1><p>Email: support@reloc.ru</p><p>Telegram: @reloc_support</p><p>Время работы: 24/7</p>',
+      content: '<h1>Контакты</h1><p>Email: support@backdoor.store</p><p>Telegram: @backdoor_support</p><p>Время работы: 24/7</p>',
     },
     {
       slug: 'privacy',
@@ -544,12 +544,12 @@ async function main() {
     {
       slug: 'terms',
       title: 'Условия использования',
-      content: '<h1>Условия использования</h1><p>Используя сайт Reloc Store, вы соглашаетесь с настоящими условиями. Пожалуйста, ознакомьтесь с ними внимательно.</p>',
+      content: '<h1>Условия использования</h1><p>Используя сайт Backdoor Store, вы соглашаетесь с настоящими условиями. Пожалуйста, ознакомьтесь с ними внимательно.</p>',
     },
     {
       slug: 'support',
       title: 'Поддержка',
-      content: '<h1>Поддержка</h1><p>Если у вас возникли проблемы с заказом, обратитесь в нашу службу поддержки любым удобным способом.</p><p>Email: support@reloc.ru</p><p>Telegram: @reloc_support</p>',
+      content: '<h1>Поддержка</h1><p>Если у вас возникли проблемы с заказом, обратитесь в нашу службу поддержки любым удобным способом.</p><p>Email: support@backdoor.store</p><p>Telegram: @backdoor_support</p>',
     },
   ];
 
@@ -566,7 +566,7 @@ async function main() {
   const banners = [
     {
       title: 'Лучшие игры по ценам Турции',
-      imageUrl: 'https://cdn.reloc.ru/banners/turkey-banner.jpg',
+      imageUrl: 'https://cdn.backdoor.store/banners/turkey-banner.jpg',
       linkUrl: '/catalog?region=TURKEY',
       position: 'hero',
       isActive: true,
@@ -574,7 +574,7 @@ async function main() {
     },
     {
       title: 'PS Plus — играй больше за меньше',
-      imageUrl: 'https://cdn.reloc.ru/banners/psplus-banner.jpg',
+      imageUrl: 'https://cdn.backdoor.store/banners/psplus-banner.jpg',
       linkUrl: '/catalog?category=ps-plus',
       position: 'hero',
       isActive: true,
@@ -582,7 +582,7 @@ async function main() {
     },
     {
       title: 'Пополни кошелёк PSN за минуту',
-      imageUrl: 'https://cdn.reloc.ru/banners/topup-banner.jpg',
+      imageUrl: 'https://cdn.backdoor.store/banners/topup-banner.jpg',
       linkUrl: '/catalog?type=TOPUP_CARD',
       position: 'promo',
       isActive: true,

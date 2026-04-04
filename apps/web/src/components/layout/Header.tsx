@@ -15,10 +15,10 @@ export interface HeaderProps {
   onMenuOpen?: () => void;
 }
 
-function RelocLogo() {
+function BackdoorLogo() {
   return (
     <Link href="/" className="flex items-center gap-0 flex-shrink-0">
-      <span className="text-xl font-extrabold text-white tracking-tight">reloc</span>
+      <span className="text-xl font-extrabold text-white tracking-tight">backdoor</span>
       <span className="text-xl font-extrabold text-accent-hover tracking-tight">.store</span>
     </Link>
   );
@@ -61,7 +61,7 @@ export function Header({ onMenuOpen }: HeaderProps) {
         </button>
 
         {/* Logo */}
-        <RelocLogo />
+        <BackdoorLogo />
 
         {/* Desktop Search — center */}
         <div className="hidden md:flex flex-1 max-w-xl mx-auto">

@@ -8,7 +8,7 @@ test.describe('Homepage', () => {
     await home.waitForLoad();
 
     const title = await page.title();
-    expect(title).toContain('Reloc');
+    expect(title).toContain('Backdoor');
   });
 
   test('homepage has navigation header', async ({ page }) => {

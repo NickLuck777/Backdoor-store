@@ -21,7 +21,7 @@ export function buildProductSchema(product: ProductDto, _rateToRub?: number) {
       availability: product.isAvailable
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
-      seller: { '@type': 'Organization', name: 'Reloc Store' },
+      seller: { '@type': 'Organization', name: 'Backdoor Store' },
     },
   };
 }
@@ -34,7 +34,7 @@ export function buildBreadcrumbSchema(items: { label: string; href?: string }[])
       '@type': 'ListItem',
       position: index + 1,
       name: item.label,
-      ...(item.href ? { item: `https://reloc.store${item.href}` } : {}),
+      ...(item.href ? { item: `https://backdoor.store${item.href}` } : {}),
     })),
   };
 }
@@ -55,14 +55,14 @@ export function buildOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Reloc Store',
+    name: 'Backdoor Store',
     description: 'Сервис пополнения PS Store — игры PlayStation по ценам Турции и Индии',
-    url: 'https://reloc.store',
-    logo: 'https://reloc.store/logo.png',
+    url: 'https://backdoor.store',
+    logo: 'https://backdoor.store/logo.png',
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer service',
-      email: 'support@reloc.ru',
+      email: 'support@backdoor.store',
       availableLanguage: 'Russian',
     },
   };

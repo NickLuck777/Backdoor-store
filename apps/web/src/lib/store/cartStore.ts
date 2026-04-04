@@ -88,7 +88,7 @@ export const useCartStore = create<CartStore>()(
         get().items.reduce((acc, i) => acc + i.product.price * i.quantity, 0),
     }),
     {
-      name: 'reloc-cart',
+      name: 'backdoor-cart',
       partialize: (state) => ({ items: state.items, sessionId: state.sessionId }),
     },
   ),

@@ -53,7 +53,7 @@ const HARDCODED_FAQ: FAQItem[] = [
     id: 'faq-8',
     question: 'Нужна помощь!',
     answer:
-      'Свяжитесь с нашей поддержкой — поможем разобраться. Напишите нам в Telegram @reloc_support или на email support@reloc.ru. Работаем ежедневно с 9:00 до 23:00 МСК.',
+      'Свяжитесь с нашей поддержкой — поможем разобраться. Напишите нам в Telegram @backdoor_support или на email support@backdoor.store. Работаем ежедневно с 9:00 до 23:00 МСК.',
   },
 ];
 
@@ -90,7 +90,7 @@ export default function SupportClient() {
           </div>
           <h1 className="text-4xl font-extrabold text-white mb-3">Центр поддержки</h1>
           <p className="text-[#B0B0B0] text-lg leading-relaxed">
-            Ответы на самые частые вопросы о пополнении PS Store через Reloc
+            Ответы на самые частые вопросы о пополнении PS Store через Backdoor
           </p>
         </div>
       </section>
@@ -135,7 +135,7 @@ export default function SupportClient() {
             Наша команда поддержки готова помочь ежедневно с 9:00 до 23:00 МСК
           </p>
           <a
-            href="https://t.me/reloc_support"
+            href="https://t.me/backdoor_support"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-[#003087] hover:bg-[#0044CC] text-white

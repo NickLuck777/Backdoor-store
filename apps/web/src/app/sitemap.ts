@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://reloc.store';
+  const baseUrl = 'https://backdoor.store';
 
   // Static pages
   const staticPages = [

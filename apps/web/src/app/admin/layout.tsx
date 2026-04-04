@@ -304,12 +304,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Menu size={20} />
           </button>
           <div className="flex-1">
-            <h1 className="text-sm font-semibold text-[#B0B0B0]">Reloc Store</h1>
+            <h1 className="text-sm font-semibold text-[#B0B0B0]">Backdoor Store</h1>
           </div>
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex flex-col items-end">
               <span className="text-xs font-semibold text-white">Администратор</span>
-              <span className="text-[10px] text-[#B0B0B0]">admin@reloc.store</span>
+              <span className="text-[10px] text-[#B0B0B0]">admin@backdoor.store</span>
             </div>
             <div className="w-8 h-8 rounded-full bg-[#003087] flex items-center justify-center text-white text-xs font-bold">
               A

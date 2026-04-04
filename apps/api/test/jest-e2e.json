@@ -7,6 +7,6 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "moduleNameMapper": {
-    "@reloc/shared": "<rootDir>/../../../packages/shared/src/index.ts"
+    "@backdoor/shared": "<rootDir>/../../../packages/shared/src/index.ts"
   }
 }

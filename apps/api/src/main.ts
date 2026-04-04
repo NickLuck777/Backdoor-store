@@ -26,7 +26,7 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
-      .setTitle('Reloc Store API')
+      .setTitle('Backdoor Store API')
       .setDescription('PS Store top-up cards store API')
       .setVersion('1.0')
       .addBearerAuth()

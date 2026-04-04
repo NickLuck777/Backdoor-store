@@ -22,15 +22,15 @@ export default function AdminSettingsPage() {
         <div className="p-5 flex flex-col gap-4">
           <div>
             <label className="admin-label">Название магазина</label>
-            <Input defaultValue="Reloc Store" />
+            <Input defaultValue="Backdoor Store" />
           </div>
           <div>
             <label className="admin-label">Email для уведомлений</label>
-            <Input type="email" defaultValue="admin@reloc.store" />
+            <Input type="email" defaultValue="admin@backdoor.store" />
           </div>
           <div>
             <label className="admin-label">Telegram для уведомлений</label>
-            <Input defaultValue="@reloc_admin" />
+            <Input defaultValue="@backdoor_admin" />
           </div>
           <div className="flex justify-end">
             <Button size="sm">Сохранить</Button>

@@ -73,7 +73,7 @@ export default function OrderFailedPage() {
           </Link>
 
           <a
-            href="https://t.me/reloc_store_support"
+            href="https://t.me/backdoor_store_support"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-sm text-muted hover:text-white transition-colors duration-200"

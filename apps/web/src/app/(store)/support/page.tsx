@@ -4,7 +4,7 @@ import { buildFaqSchema } from '@/lib/schema';
 import SupportClient from './SupportClient';
 
 export const metadata: Metadata = {
-  title: 'Поддержка и FAQ — Reloc Store',
+  title: 'Поддержка и FAQ — Backdoor Store',
   description: 'Ответы на частые вопросы о пополнении PS Store, оплате через СБП и активации кодов PlayStation.',
 };
 
@@ -16,7 +16,7 @@ const FAQ_ITEMS = [
   { question: 'Что такое карта пополнения?', answer: 'Это специальный код, который вы активируете на своём PSN-аккаунте. После активации нужная сумма появляется на балансе, которую вы тратите на покупку игры.' },
   { question: 'Как активировать код?', answer: 'Это просто и можно сделать с консоли или через браузер. Мы пришлём подробную инструкцию после оплаты.' },
   { question: 'Можно ли купить конкретную игру напрямую?', answer: 'Вы можете купить карту пополнения нужного номинала и приобрести игру в PS Store самостоятельно.' },
-  { question: 'Нужна помощь!', answer: 'Свяжитесь с нашей поддержкой — поможем разобраться. Напишите нам в Telegram @reloc_support или на email support@reloc.ru. Работаем ежедневно с 9:00 до 23:00 МСК.' },
+  { question: 'Нужна помощь!', answer: 'Свяжитесь с нашей поддержкой — поможем разобраться. Напишите нам в Telegram @backdoor_support или на email support@backdoor.store. Работаем ежедневно с 9:00 до 23:00 МСК.' },
 ];
 
 export default function SupportPage() {

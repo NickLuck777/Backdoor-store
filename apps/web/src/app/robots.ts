@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin', '/api', '/order/'],
       },
     ],
-    sitemap: 'https://reloc.store/sitemap.xml',
+    sitemap: 'https://backdoor.store/sitemap.xml',
   };
 }

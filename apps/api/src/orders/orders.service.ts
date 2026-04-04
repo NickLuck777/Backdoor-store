@@ -37,7 +37,7 @@ export class OrdersService {
     });
 
     const seq = String(countToday + 1).padStart(3, '0');
-    return `REL-${dateStr}-${seq}`;
+    return `BDR-${dateStr}-${seq}`;
   }
 
   async create(dto: CreateOrderDto, userId?: number) {

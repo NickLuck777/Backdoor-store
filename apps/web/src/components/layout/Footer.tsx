@@ -62,7 +62,7 @@ export function Footer({ className }: { className?: string }) {
           {/* Brand */}
           <div className="flex flex-col gap-4">
             <Link href="/" className="flex items-center">
-              <span className="text-2xl font-extrabold text-white tracking-tight">reloc</span>
+              <span className="text-2xl font-extrabold text-white tracking-tight">backdoor</span>
               <span className="text-2xl font-extrabold text-accent-hover tracking-tight">.store</span>
             </Link>
             <p className="text-sm text-muted leading-relaxed">
@@ -126,12 +126,12 @@ export function Footer({ className }: { className?: string }) {
         {/* Bottom bar */}
         <div className="border-t border-border/40 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-muted">
-            &copy; 2026 Reloc Store. Все права защищены.
+            &copy; 2026 Backdoor Store. Все права защищены.
           </p>
           <p className="text-xs text-muted text-center sm:text-right">
             PlayStation и PS Store — товарные знаки Sony Interactive Entertainment LLC.
             <br className="sm:hidden" />
-            {' '}Reloc Store не аффилирован с Sony.
+            {' '}Backdoor Store не аффилирован с Sony.
           </p>
         </div>
       </div>

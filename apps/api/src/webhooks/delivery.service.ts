@@ -110,12 +110,12 @@ Activation instructions:
 4. The balance will be credited to your account
 
 Thank you for your purchase!
-Reloc Store Team
+Backdoor Store Team
     `.trim();
 
     if (this.transporter) {
       await this.transporter.sendMail({
-        from: this.configService.get<string>('EMAIL_FROM') ?? 'noreply@reloc-store.com',
+        from: this.configService.get<string>('EMAIL_FROM') ?? 'noreply@backdoor.store',
         to: order.customerEmail,
         subject: `Order ${order.orderNumber} — Your codes are ready!`,
         text,
@@ -142,7 +142,7 @@ Please manually assign codes and mark the order as delivered.
 
     if (this.transporter && operatorEmail) {
       await this.transporter.sendMail({
-        from: this.configService.get<string>('EMAIL_FROM') ?? 'noreply@reloc-store.com',
+        from: this.configService.get<string>('EMAIL_FROM') ?? 'noreply@backdoor.store',
         to: operatorEmail,
         subject: `[ACTION REQUIRED] Manual delivery for ${order.orderNumber}`,
         text,

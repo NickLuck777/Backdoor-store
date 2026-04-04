@@ -7,13 +7,13 @@ import { YandexMetrika } from '@/components/seo/YandexMetrika';
 const inter = Inter({ subsets: ['latin', 'cyrillic'] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://reloc.store'),
+  metadataBase: new URL('https://backdoor.store'),
   alternates: {
     canonical: '/',
   },
   title: {
-    default: 'Reloc Store — Игры PlayStation по лучшим ценам',
-    template: '%s | Reloc Store',
+    default: 'Backdoor Store — Игры PlayStation по лучшим ценам',
+    template: '%s | Backdoor Store',
   },
   description: 'Купите игры и подписки PlayStation с оплатой через СБП. Автоматическая доставка кодов пополнения.',
 };

@@ -141,10 +141,10 @@ export default function ContactsClient() {
                 <span className="text-white font-semibold">Email</span>
               </div>
               <a
-                href="mailto:support@reloc.ru"
+                href="mailto:support@backdoor.store"
                 className="text-[#6699FF] hover:text-white transition-colors text-sm"
               >
-                support@reloc.ru
+                support@backdoor.store
               </a>
             </div>
 
@@ -159,12 +159,12 @@ export default function ContactsClient() {
                 <span className="text-white font-semibold">Telegram</span>
               </div>
               <a
-                href="https://t.me/reloc_support"
+                href="https://t.me/backdoor_support"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#6699FF] hover:text-white transition-colors text-sm"
               >
-                @reloc_support
+                @backdoor_support
               </a>
             </div>
 
@@ -190,12 +190,12 @@ export default function ContactsClient() {
                 <span className="text-white font-semibold">ВКонтакте</span>
               </div>
               <a
-                href="https://vk.com/relocstore"
+                href="https://vk.com/backdoorstore"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#6699FF] hover:text-white transition-colors text-sm"
               >
-                vk.com/relocstore
+                vk.com/backdoorstore
               </a>
             </div>
 

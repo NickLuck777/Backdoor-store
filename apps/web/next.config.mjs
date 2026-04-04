@@ -7,7 +7,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'image.api.playstation.com' },
       { protocol: 'https', hostname: 'store.playstation.com' },
       { protocol: 'https', hostname: '*.cloudfront.net' },
-      { protocol: 'https', hostname: 'cdn.reloc.ru' },
+      { protocol: 'https', hostname: 'cdn.backdoor.store' },
       { protocol: 'https', hostname: 'placehold.co' },
     ],
   },

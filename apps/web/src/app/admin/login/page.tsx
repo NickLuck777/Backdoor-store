@@ -67,7 +67,7 @@ export default function AdminLoginPage() {
           <div className="w-14 h-14 rounded-2xl bg-[#003087] flex items-center justify-center shadow-[0_0_28px_rgba(0,48,135,0.5)] mb-4">
             <Store size={28} />
           </div>
-          <h1 className="text-xl font-bold text-white">Reloc Store</h1>
+          <h1 className="text-xl font-bold text-white">Backdoor Store</h1>
           <p className="text-sm text-[#B0B0B0] mt-1">Панель управления</p>
         </div>
 
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@reloc.store"
+                placeholder="admin@backdoor.store"
                 leftIcon={<Mail size={16} />}
                 autoComplete="email"
                 autoFocus

@@ -18,7 +18,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@reloc/shared": ["../../packages/shared/src/index.ts"]
+      "@backdoor/shared": ["../../packages/shared/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"],

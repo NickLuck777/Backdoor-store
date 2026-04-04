@@ -67,7 +67,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
             {/* Header */}
             <div className="flex items-center justify-between px-5 h-16 border-b border-border flex-shrink-0">
               <Link href="/" onClick={onClose} className="flex items-center">
-                <span className="text-xl font-extrabold text-white">reloc</span>
+                <span className="text-xl font-extrabold text-white">backdoor</span>
                 <span className="text-xl font-extrabold text-accent-hover">.store</span>
               </Link>
               <button

@@ -4,7 +4,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { buildOrganizationSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
-  title: 'О нас — Reloc Store',
+  title: 'О нас — Backdoor Store',
   description:
     'Крупнейший сервис пополнения PS Store в России. Более 60 000 клиентов доверяют нам с 2022 года. Рейтинг 5.0 на Яндекс Картах.',
 };
@@ -114,7 +114,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-white mb-4">Наша миссия</h2>
           <p className="text-[#B0B0B0] text-base leading-relaxed">
             Мы помогаем российским геймерам получить доступ к любимым играм, несмотря на
-            ограничения. Reloc Store — партнёрский сервис{' '}
+            ограничения. Backdoor Store — партнёрский сервис{' '}
             <span className="text-white font-medium">Cloudmill (Санкт-Петербург)</span>, работающий
             с 2022 года. За это время мы отработали десятки тысяч заказов и собрали рейтинг 5.0 на
             Яндекс Картах.
@@ -203,7 +203,7 @@ export default function AboutPage() {
             <div>
               <div className="text-white font-semibold mb-1">ВКонтакте</div>
               <div className="text-2xl font-extrabold text-white mb-1">3 000+</div>
-              <p className="text-[#B0B0B0] text-xs">отзывов в сообществе vk.com/relocstore</p>
+              <p className="text-[#B0B0B0] text-xs">отзывов в сообществе vk.com/backdoorstore</p>
             </div>
           </div>
         </div>

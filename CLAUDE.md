@@ -1,4 +1,4 @@
-# CLAUDE.md — Reloc Store
+# CLAUDE.md — Backdoor Store
 
 ## Project
 NestJS + Next.js monorepo for a PS Store top-up cards online store.
@@ -90,7 +90,7 @@ Critical vars that enable/disable features:
 
 ## Admin access
 URL: /admin
-Default: admin@reloc.ru / Admin123! (from seed data)
+Default: admin@backdoor.store / Admin123! (from seed data)
 
 ## Git conventions
 - Atomic commits per logical change
