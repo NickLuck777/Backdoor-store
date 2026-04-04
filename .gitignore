@@ -27,9 +27,7 @@ Thumbs.db
 .idea/
 
 # Prisma
-apps/api/prisma/migrations/**/migration.sql
-# Keep migrations directory
-!apps/api/prisma/migrations/
+# Migrations are tracked in git
 
 # Testing
 coverage/
