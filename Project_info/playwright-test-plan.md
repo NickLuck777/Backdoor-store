@@ -26,8 +26,23 @@
 | 15 | Terms page | Navigate to /terms | Full terms text rendered |
 | 16 | 404 page | Navigate to /nonexistent | Custom 404 page shows |
 
+## Admin Panel Tests
+
+| # | Test | Steps | Expected |
+|---|------|-------|----------|
+| 17 | Admin login | Navigate to /admin → enter credentials → submit | Redirected to /admin dashboard |
+| 18 | Dashboard loads | Log in as admin | Stat cards show sales, orders, users |
+| 19 | Products table | /admin/products | Table with products, search works |
+| 20 | Create product | /admin/products → "Создать" → fill form → save | Product appears in table |
+| 21 | Orders table | /admin/orders | Orders table with filters |
+| 22 | Order detail | Click order in table | Order detail with items and status |
+| 23 | Code inventory | /admin/codes | Inventory by denomination/currency |
+| 24 | CSV code import | /admin/codes/import → upload CSV → import | Success message with counts |
+| 25 | Exchange rates | /admin/rates | Rates table, inline edit works |
+
 ## Changelog
 | Date | Description |
 |------|-------------|
 | 2026-04-04 | Initial test plan created by frontend agent (cart/checkout flows) |
 | 2026-04-04 | Info pages tests added by infopages agent |
+| 2026-04-04 | Admin panel tests added (tests 17-25) |
