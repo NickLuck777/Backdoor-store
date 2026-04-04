@@ -10,3 +10,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /* Admin panel utility classes */
+  .admin-label {
+    @apply block text-xs font-semibold text-[#B0B0B0] uppercase tracking-wider mb-1.5;
+  }
+
+  .admin-select {
+    @apply w-full h-10 bg-[#1E2030] border border-[#2D2D4A] rounded-xl text-white text-sm px-4;
+    @apply focus:outline-none focus:ring-2 focus:ring-[#003087] focus:border-[#003087];
+    @apply transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)];
+    @apply cursor-pointer;
+  }
+
+  .admin-select option {
+    @apply bg-[#1E2030] text-white;
+  }
+}
