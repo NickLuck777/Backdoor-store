@@ -16,6 +16,7 @@ import { Prisma } from '@prisma/client';
 
 const HOMEPAGE_CACHE_KEY = 'homepage_sections';
 const HOMEPAGE_CACHE_TTL = 300; // 5 min
+const PRODUCT_CACHE_TTL = 60; // 1 min
 
 @Injectable()
 export class ProductsService {
@@ -105,6 +106,10 @@ export class ProductsService {
   }
 
   async findOne(slug: string) {
+    const cacheKey = `product:${slug}`;
+    const cached = await this.cache.get(cacheKey);
+    if (cached) return cached;
+
     const product = await this.prisma.product.findUnique({
       where: { slug },
       include: {
@@ -114,6 +119,8 @@ export class ProductsService {
       },
     });
     if (!product) throw new NotFoundException('Product not found');
+
+    await this.cache.set(cacheKey, product, PRODUCT_CACHE_TTL);
     return product;
   }
 
@@ -236,7 +243,10 @@ export class ProductsService {
         categories: { include: { category: true } },
       },
     });
-    await this.cache.del(HOMEPAGE_CACHE_KEY);
+    await Promise.all([
+      this.cache.del(HOMEPAGE_CACHE_KEY),
+      this.cache.del(`product:${existing.slug}`),
+    ]);
     return product;
   }
 
@@ -244,7 +254,10 @@ export class ProductsService {
     const existing = await this.prisma.product.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Product not found');
     await this.prisma.product.delete({ where: { id } });
-    await this.cache.del(HOMEPAGE_CACHE_KEY);
+    await Promise.all([
+      this.cache.del(HOMEPAGE_CACHE_KEY),
+      this.cache.del(`product:${existing.slug}`),
+    ]);
     return { deleted: true };
   }
 

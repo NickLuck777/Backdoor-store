@@ -1,13 +1,25 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto, UpdateCategoryDto, ReorderCategoriesDto } from './categories.dto';
 import { FilterProductsDto } from '../products/products.dto';
 
+const HOMEPAGE_CACHE_KEY = 'homepage_sections';
+const CATEGORIES_CACHE_KEY = 'categories_all';
+const CATEGORIES_CACHE_TTL = 300; // 5 min
+
 @Injectable()
 export class CategoriesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cache: Cache,
+  ) {}
 
   async findAll() {
+    const cached = await this.cache.get(CATEGORIES_CACHE_KEY);
+    if (cached) return cached;
+
     const categories = await this.prisma.category.findMany({
       orderBy: { sortOrder: 'asc' },
       include: {
@@ -15,11 +27,14 @@ export class CategoriesService {
       },
     });
 
-    return categories.map((cat) => ({
+    const result = categories.map((cat) => ({
       ...cat,
       productCount: cat._count.products,
       _count: undefined,
     }));
+
+    await this.cache.set(CATEGORIES_CACHE_KEY, result, CATEGORIES_CACHE_TTL);
+    return result;
   }
 
   async findBySlug(slug: string) {
@@ -74,19 +89,33 @@ export class CategoriesService {
   }
 
   async create(dto: CreateCategoryDto) {
-    return this.prisma.category.create({ data: dto });
+    const category = await this.prisma.category.create({ data: dto });
+    await Promise.all([
+      this.cache.del(CATEGORIES_CACHE_KEY),
+      this.cache.del(HOMEPAGE_CACHE_KEY),
+    ]);
+    return category;
   }
 
   async update(id: number, dto: UpdateCategoryDto) {
     const existing = await this.prisma.category.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Category not found');
-    return this.prisma.category.update({ where: { id }, data: dto });
+    const category = await this.prisma.category.update({ where: { id }, data: dto });
+    await Promise.all([
+      this.cache.del(CATEGORIES_CACHE_KEY),
+      this.cache.del(HOMEPAGE_CACHE_KEY),
+    ]);
+    return category;
   }
 
   async delete(id: number) {
     const existing = await this.prisma.category.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Category not found');
     await this.prisma.category.delete({ where: { id } });
+    await Promise.all([
+      this.cache.del(CATEGORIES_CACHE_KEY),
+      this.cache.del(HOMEPAGE_CACHE_KEY),
+    ]);
     return { deleted: true };
   }
 
@@ -99,6 +128,10 @@ export class CategoriesService {
         }),
       ),
     );
+    await Promise.all([
+      this.cache.del(CATEGORIES_CACHE_KEY),
+      this.cache.del(HOMEPAGE_CACHE_KEY),
+    ]);
     return { reordered: true };
   }
 }
