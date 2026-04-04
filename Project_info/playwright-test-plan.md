@@ -40,9 +40,26 @@
 | 24 | CSV code import | /admin/codes/import → upload CSV → import | Success message with counts |
 | 25 | Exchange rates | /admin/rates | Rates table, inline edit works |
 
+## E2E Test Suites (Playwright)
+
+| Suite | File | Tests |
+|-------|------|-------|
+| Homepage | homepage.spec.ts | 5 tests (load, header, footer, search, navigation) |
+| Catalog | catalog.spec.ts | 5 tests (load, URL, title, filters, navigation) |
+| Search | search.spec.ts | 3 tests (with query, title, empty) |
+| Cart | cart.spec.ts | 3 tests (load, empty state, checkout button) |
+| Checkout | checkout.spec.ts | 3 tests (load, form fields, email validation) |
+| Info Pages | info-pages.spec.ts | 7 tests (support, about, contacts, privacy, terms, 404) |
+| Admin | admin.spec.ts | 6 tests (login page, redirect, fields, pages) |
+| Mobile | mobile.spec.ts | 5 tests (homepage, viewport, catalog, cart, FAQ) |
+| SEO | seo.spec.ts | 7 tests (title, meta description, sitemap, robots.txt) |
+
+**Total: 44 E2E tests**
+
 ## Changelog
 | Date | Description |
 |------|-------------|
 | 2026-04-04 | Initial test plan created by frontend agent (cart/checkout flows) |
 | 2026-04-04 | Info pages tests added by infopages agent |
 | 2026-04-04 | Admin panel tests added (tests 17-25) |
+| 2026-04-04 | Phase 8: Full Playwright E2E suite added (44 tests, 9 suites) |
