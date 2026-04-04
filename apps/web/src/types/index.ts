@@ -31,7 +31,9 @@ export interface CategoryDto {
 }
 
 export interface HomepageSection {
-  category: CategoryDto;
+  id: number;
+  name: string;
+  slug: string;
   products: ProductDto[];
 }
 

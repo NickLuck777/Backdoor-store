@@ -168,23 +168,23 @@ function HomepageSections() {
   return (
     <div className="flex flex-col gap-12 py-12">
       {sections.slice(0, 14).map((section, i) => (
-        <React.Fragment key={section.category.id}>
+        <React.Fragment key={section.id}>
           <div
             ref={(el) => { sectionRefs.current[i] = el; }}
             data-idx={String(i)}
           >
             {visibleSections.has(i) ? (
               <ProductCarousel
-                title={section.category.name}
+                title={section.name}
                 products={section.products}
-                viewAllHref={`/catalog?categorySlug=${section.category.slug}`}
+                viewAllHref={`/catalog?categorySlug=${section.slug}`}
                 onAddToCart={(id) => {
-                  const product = section.products.find((p) => p.id === id);
+                  const product = section.products.find((p: any) => p.id === id);
                   if (product) addItem(product);
                 }}
               />
             ) : (
-              <ProductCarousel title={section.category.name} products={[]} isLoading />
+              <ProductCarousel title={section.name} products={[]} isLoading />
             )}
           </div>
 
