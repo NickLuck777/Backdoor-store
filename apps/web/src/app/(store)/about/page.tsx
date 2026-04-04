@@ -1,10 +1,12 @@
 import * as React from 'react';
 import type { Metadata } from 'next';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { buildOrganizationSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
-  title: 'О нас',
+  title: 'О нас — Reloc Store',
   description:
-    'Reloc Store — крупнейший сервис пополнения PS Store в России. Более 60 000 клиентов доверяют нам с 2022 года.',
+    'Крупнейший сервис пополнения PS Store в России. Более 60 000 клиентов доверяют нам с 2022 года. Рейтинг 5.0 на Яндекс Картах.',
 };
 
 const STATS = [
@@ -73,6 +75,8 @@ const REGIONS = [
 
 export default function AboutPage() {
   return (
+    <>
+    <JsonLd data={buildOrganizationSchema()} />
     <div className="min-h-screen bg-background">
       {/* Hero */}
       <section className="bg-gradient-to-b from-[#1E1E3A] to-background pt-16 pb-20 px-4 text-center">
@@ -205,5 +209,6 @@ export default function AboutPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }
