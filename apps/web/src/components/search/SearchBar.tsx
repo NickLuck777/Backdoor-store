@@ -9,6 +9,26 @@ import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils';
 import { useSearch } from '@/lib/hooks/useProducts';
 
+function SearchResultImage({ product }: { product: { imageUrl?: string; title: string } }) {
+  const [error, setError] = React.useState(false);
+  return (
+    <div className="w-8 h-10 rounded overflow-hidden flex-shrink-0 bg-[#2A2A4A]">
+      {product.imageUrl && !error ? (
+        <Image
+          src={product.imageUrl}
+          alt={product.title}
+          width={32}
+          height={40}
+          className="object-cover w-full h-full"
+          onError={() => setError(true)}
+        />
+      ) : (
+        <div className="w-full h-full bg-gradient-to-br from-accent to-accent-hover" />
+      )}
+    </div>
+  );
+}
+
 export interface SearchBarProps {
   onSearch?: (query: string) => void;
   placeholder?: string;
@@ -147,19 +167,7 @@ export function SearchBar({
                     )}
                   >
                     {/* Cover thumbnail */}
-                    <div className="w-8 h-10 rounded overflow-hidden flex-shrink-0 bg-[#2A2A4A]">
-                      {product.imageUrl ? (
-                        <Image
-                          src={product.imageUrl}
-                          alt={product.title}
-                          width={32}
-                          height={40}
-                          className="object-cover w-full h-full"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-accent to-accent-hover" />
-                      )}
-                    </div>
+                    <SearchResultImage product={product} />
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-foreground font-medium truncate">{product.title}</p>

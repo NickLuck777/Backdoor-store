@@ -44,6 +44,7 @@ function PSPlaceholder({ className }: { className?: string }) {
 
 export function ProductCard({ product, onAddToCart, priority = false, className }: ProductCardProps) {
   const [adding, setAdding] = React.useState(false);
+  const [imgError, setImgError] = React.useState(false);
 
   const href = `/product/${regionPath[product.region] ?? 'tr'}/${product.slug}`;
 
@@ -71,7 +72,7 @@ export function ProductCard({ product, onAddToCart, priority = false, className 
       <Link href={href} className="flex flex-col flex-1">
         {/* Cover image */}
         <div className="relative aspect-[3/4] overflow-hidden">
-          {product.imageUrl ? (
+          {product.imageUrl && !imgError ? (
             <Image
               src={product.imageUrl}
               alt={product.title}
@@ -79,6 +80,7 @@ export function ProductCard({ product, onAddToCart, priority = false, className 
               priority={priority}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
+              onError={() => setImgError(true)}
             />
           ) : (
             <PSPlaceholder className="absolute inset-0" />

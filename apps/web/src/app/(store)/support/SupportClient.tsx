@@ -61,8 +61,14 @@ function useFAQ() {
   const { data: apiFaq } = useQuery<FAQItem[]>({
     queryKey: ['faq'],
     queryFn: async () => {
-      const { data } = await api.get<FAQItem[]>('/faq');
-      return data;
+      const { data } = await api.get<any[]>('/faq');
+      // Backend returns FAQ items with numeric ids; normalize to string
+      const items = Array.isArray(data) ? data : [];
+      return items.map((item: any) => ({
+        id: String(item.id),
+        question: item.question,
+        answer: item.answer,
+      }));
     },
     retry: 1,
     staleTime: 5 * 60 * 1000,
@@ -70,9 +76,10 @@ function useFAQ() {
 
   return React.useMemo(() => {
     if (!apiFaq?.length) return HARDCODED_FAQ;
-    const existingIds = new Set(HARDCODED_FAQ.map((f) => f.id));
-    const extra = apiFaq.filter((f) => !existingIds.has(f.id));
-    return [...HARDCODED_FAQ, ...extra];
+    // Merge: use API FAQ as primary, add hardcoded ones that aren't in API
+    const apiQuestions = new Set(apiFaq.map((f) => f.question));
+    const extra = HARDCODED_FAQ.filter((f) => !apiQuestions.has(f.question));
+    return [...apiFaq, ...extra];
   }, [apiFaq]);
 }
 

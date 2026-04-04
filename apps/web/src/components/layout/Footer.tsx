@@ -26,16 +26,16 @@ const FOOTER_LINKS = [
       { label: 'Поиск', href: '/search' },
       { label: 'PS Plus', href: '/catalog?type=SUBSCRIPTION' },
       { label: 'Пополнение', href: '/catalog?type=TOPUP_CARD' },
-      { label: 'Новинки', href: '/catalog?sort=newest' },
+      { label: 'Новинки', href: '/catalog?sortBy=newest' },
     ],
   },
   {
     title: 'Помощь',
     links: [
-      { label: 'FAQ', href: '/faq' },
-      { label: 'Контакты', href: '/contact' },
+      { label: 'FAQ', href: '/support' },
+      { label: 'Контакты', href: '/contacts' },
       { label: 'О нас', href: '/about' },
-      { label: 'Как это работает', href: '/how-it-works' },
+      { label: 'Как это работает', href: '/support' },
     ],
   },
   {
@@ -43,7 +43,7 @@ const FOOTER_LINKS = [
     links: [
       { label: 'Конфиденциальность', href: '/privacy' },
       { label: 'Условия использования', href: '/terms' },
-      { label: 'Возврат', href: '/refund' },
+      { label: 'Возврат', href: '/support' },
     ],
   },
 ];

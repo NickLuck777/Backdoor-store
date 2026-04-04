@@ -13,19 +13,23 @@ import type { FilterState, ProductType, Platform, Region } from '@/types';
 const LIMIT = 24;
 
 function parseFilters(params: URLSearchParams): FilterState {
+  // Support both plural ('types') and singular ('type') query params
+  const typesRaw = params.get('types') || params.get('type');
+  const platformsRaw = params.get('platforms') || params.get('platform');
+
   return {
     region: (params.get('region') as Region) || undefined,
-    types: params.get('types')
-      ? (params.get('types')!.split(',') as ProductType[])
+    types: typesRaw
+      ? (typesRaw.split(',') as ProductType[])
       : undefined,
-    platforms: params.get('platforms')
-      ? (params.get('platforms')!.split(',') as Platform[])
+    platforms: platformsRaw
+      ? (platformsRaw.split(',') as Platform[])
       : undefined,
-    categorySlug: params.get('categorySlug') || undefined,
+    categorySlug: params.get('categorySlug') || params.get('category') || undefined,
     minPrice: params.get('minPrice') ? Number(params.get('minPrice')) : undefined,
     maxPrice: params.get('maxPrice') ? Number(params.get('maxPrice')) : undefined,
     hasDiscount: params.get('hasDiscount') === 'true' || undefined,
-    sortBy: (params.get('sortBy') as FilterState['sortBy']) || 'popular',
+    sortBy: (params.get('sortBy') || params.get('sort') as FilterState['sortBy']) || 'popular',
     page: params.get('page') ? Number(params.get('page')) : 1,
     limit: LIMIT,
   };

@@ -89,7 +89,7 @@ function HeroBanner() {
                 <ChevronRight size={18} />
               </Button>
             </Link>
-            <Link href="/how-it-works">
+            <Link href="/support">
               <Button size="lg" variant="outline">
                 Как это работает
               </Button>

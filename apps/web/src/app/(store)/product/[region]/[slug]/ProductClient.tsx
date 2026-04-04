@@ -50,6 +50,7 @@ export default function ProductClient({
   const { data: product, isLoading, error } = useProduct(slug);
   const addItem = useCartStore((state) => state.addItem);
   const [adding, setAdding] = React.useState(false);
+  const [imgError, setImgError] = React.useState(false);
 
   const handleAddToCart = () => {
     if (!product || adding) return;
@@ -68,13 +69,15 @@ export default function ProductClient({
     );
   }
 
+  // Categories come as {productId, categoryId, category: {...}} from the API
+  const firstCategory = product.categories?.[0]?.category ?? product.categories?.[0];
   const breadcrumbs = [
     { label: 'Каталог', href: '/catalog' },
-    ...(product.categories?.[0]
+    ...(firstCategory?.name
       ? [
           {
-            label: product.categories[0].name,
-            href: `/catalog?categorySlug=${product.categories[0].slug}`,
+            label: firstCategory.name,
+            href: `/catalog?categorySlug=${firstCategory.slug}`,
           },
         ]
       : []),
@@ -94,7 +97,7 @@ export default function ProductClient({
           className="relative"
         >
           <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.5)] w-full max-w-sm mx-auto lg:mx-0">
-            {product.imageUrl ? (
+            {product.imageUrl && !imgError ? (
               <Image
                 src={product.imageUrl}
                 alt={product.title}
@@ -102,6 +105,7 @@ export default function ProductClient({
                 priority
                 sizes="(max-width: 1024px) 90vw, 340px"
                 className="object-cover"
+                onError={() => setImgError(true)}
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent via-[#1A1A4E] to-accent-hover">

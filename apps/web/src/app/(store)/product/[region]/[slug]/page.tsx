@@ -54,13 +54,15 @@ export default async function ProductPage({ params }: Props) {
   const { region, slug } = await params;
   const product = await fetchProduct(slug);
 
+  // Categories come as {productId, categoryId, category: {...}} from the API
+  const firstCat = product?.categories?.[0]?.category ?? product?.categories?.[0];
   const breadcrumbs = [
     { label: 'Каталог', href: '/catalog' },
-    ...(product?.categories?.[0]
+    ...(firstCat?.name
       ? [
           {
-            label: product.categories[0].name,
-            href: `/catalog?categorySlug=${product.categories[0].slug}`,
+            label: firstCat.name,
+            href: `/catalog?categorySlug=${firstCat.slug}`,
           },
         ]
       : []),
