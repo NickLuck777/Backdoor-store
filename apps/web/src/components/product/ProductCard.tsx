@@ -87,14 +87,7 @@ export function ProductCard({ product, onAddToCart, priority = false, className 
           {/* Gradient overlay at bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-card/80 to-transparent" />
 
-          {/* Platform badge — top left */}
-          {product.platform && (
-            <div className="absolute top-2 left-2">
-              <PlatformBadge platform={product.platform} />
-            </div>
-          )}
-
-          {/* Badges — top right stack */}
+          {/* Discount badge — top right */}
           <div className="absolute top-2 right-2 flex flex-col items-end gap-1">
             {product.isPreorder && <PreorderBadge />}
             {product.discount != null && product.discount > 0 && (
@@ -105,6 +98,12 @@ export function ProductCard({ product, onAddToCart, priority = false, className 
 
         {/* Card content */}
         <div className="flex flex-col flex-1 p-3 gap-1.5">
+          {/* Platform badge */}
+          {product.platform && (
+            <div className="mb-0.5">
+              <PlatformBadge platform={product.platform} />
+            </div>
+          )}
           {/* Title */}
           <h3 className="text-foreground font-semibold text-sm leading-snug line-clamp-2 group-hover:text-white transition-colors duration-200">
             {product.title}
