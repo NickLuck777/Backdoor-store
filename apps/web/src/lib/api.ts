@@ -17,9 +17,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor: handle 401
+// Response interceptor: unwrap { data, success, message } envelope from TransformInterceptor
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.data && typeof response.data === 'object' && 'success' in response.data) {
+      response.data = response.data.data;
+    }
+    return response;
+  },
   async (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('accessToken');

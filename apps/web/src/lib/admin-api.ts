@@ -19,9 +19,14 @@ adminApi.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor: on 401 redirect to admin login
+// Response interceptor: unwrap { data, success, message } envelope, handle 401
 adminApi.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.data && typeof response.data === 'object' && 'success' in response.data) {
+      response.data = response.data.data;
+    }
+    return response;
+  },
   async (error) => {
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
