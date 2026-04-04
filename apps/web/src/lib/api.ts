@@ -20,9 +20,11 @@ api.interceptors.request.use((config) => {
 // Response interceptor: unwrap { data, success, message } envelope from TransformInterceptor
 api.interceptors.response.use(
   (response) => {
-    if (response.data && typeof response.data === 'object' && 'success' in response.data) {
-      response.data = response.data.data;
+    let d = response.data;
+    while (d && typeof d === 'object' && !Array.isArray(d) && 'success' in d && 'data' in d) {
+      d = d.data;
     }
+    response.data = d;
     return response;
   },
   async (error) => {
