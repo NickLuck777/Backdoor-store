@@ -1,0 +1,23 @@
+# Railway config-as-code for the API service.
+#
+# Scope: this file applies ONLY to the API service.
+# Postgres and Redis are deployed from public Docker images and have no
+# repo source, so they ignore this file. Their settings live in the
+# Railway dashboard (project "Backdoor Store" → service → Variables).
+#
+# Critical dashboard-only settings (must be re-applied to fresh services):
+#   Postgres → Variables → PGDATA = /var/lib/postgresql/data/pgdata
+#     Why: the Railway volume mount uses ext4 and contains a `lost+found`
+#     directory at the root, which makes Postgres `initdb` fail. Putting
+#     PGDATA in a subdirectory bypasses the check.
+#   Redis → no extra settings, default image works.
+
+[build]
+builder = "RAILPACK"
+
+[deploy]
+# Run migrations + seed (idempotent via slug upsert) on every deploy,
+# then start the NestJS app. The seed step is safe to run repeatedly.
+startCommand = "cd apps/api && npx prisma migrate deploy && npx prisma db seed && node dist/main.js"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

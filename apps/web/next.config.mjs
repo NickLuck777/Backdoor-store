@@ -10,8 +10,11 @@ const nextConfig = {
       { protocol: 'https', hostname: 'store.playstation.com' },
       { protocol: 'https', hostname: '*.cloudfront.net' },
       { protocol: 'https', hostname: 'cdn.backdoor.store' },
-      { protocol: 'https', hostname: 'placehold.co' },
     ],
+    // Required for serving local SVG product/banner art via next/image.
+    // Safe here because we only serve files we author in /public/images/.
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
