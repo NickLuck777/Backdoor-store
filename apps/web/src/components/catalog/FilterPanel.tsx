@@ -85,10 +85,19 @@ function Checkbox({
   onChange: (v: boolean) => void;
   label: React.ReactNode;
 }) {
+  // Whole row is clickable — both the box and the text label toggle the
+  // filter. Implemented as a <button> rather than a real <label>+<input>
+  // pair so we don't end up with duplicate-toggle bugs from bubbling, and
+  // so the entire row gets keyboard focus / Enter/Space handling for free.
   return (
-    <label className="flex items-center gap-2.5 cursor-pointer group py-1">
-      <div
-        onClick={() => onChange(!checked)}
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className="flex items-center gap-2.5 cursor-pointer group py-1 w-full text-left"
+    >
+      <span
         className={cn(
           'w-4 h-4 rounded-[4px] border-2 flex items-center justify-center flex-shrink-0',
           'transition-all duration-200',
@@ -102,11 +111,11 @@ function Checkbox({
             <polyline points="1,4 3.5,7 9,1" />
           </svg>
         )}
-      </div>
+      </span>
       <span className="text-sm text-muted group-hover:text-foreground transition-colors duration-200 select-none">
         {label}
       </span>
-    </label>
+    </button>
   );
 }
 
