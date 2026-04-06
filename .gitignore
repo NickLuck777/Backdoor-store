@@ -35,5 +35,8 @@ coverage/
 # Docker volumes (not source)
 docker/volumes/
 
+# Local docker-compose overrides (port conflicts, dev-only tweaks)
+docker-compose.override.yml
+
 # Claude worktrees
 .claude/worktrees/

@@ -47,22 +47,11 @@ export function PriceTag({
         {formatPrice(price, currency)}
       </span>
 
-      {/* Original price + badge */}
+      {/* Original price (strikethrough) */}
       {hasDiscount && (
-        <>
-          <span className={cn('text-muted line-through leading-none', config.original)}>
-            {formatPrice(originalPrice!, currency)}
-          </span>
-          <span
-            className={cn(
-              'inline-flex items-center rounded-full font-bold text-white leading-none',
-              'bg-discount-green shadow-[0_2px_8px_rgba(0,200,83,0.4)]',
-              config.badge,
-            )}
-          >
-            {formatDiscount(discount!)}
-          </span>
-        </>
+        <span className={cn('text-muted line-through leading-none', config.original)}>
+          {formatPrice(originalPrice!, currency)}
+        </span>
       )}
     </div>
   );
