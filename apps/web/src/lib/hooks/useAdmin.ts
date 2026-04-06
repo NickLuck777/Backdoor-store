@@ -208,6 +208,10 @@ interface ProductFilters {
   limit?: number;
 }
 
+// NOTE: there is no separate /admin/products controller on the API.
+// Products live at /products with admin role guards on write methods.
+// We hit the public list endpoint and remap {data, total} → {products, total}
+// to keep the page component shape stable.
 export function useAdminProducts(filters: ProductFilters = {}) {
   const params = new URLSearchParams();
   if (filters.search) params.set('search', filters.search);
@@ -220,10 +224,10 @@ export function useAdminProducts(filters: ProductFilters = {}) {
   return useQuery<{ products: AdminProduct[]; total: number }>({
     queryKey: ['admin', 'products', filters],
     queryFn: async () => {
-      const { data } = await adminApi.get<{ products: AdminProduct[]; total: number }>(
-        `/admin/products?${params.toString()}`,
+      const { data } = await adminApi.get<{ data: AdminProduct[]; total: number }>(
+        `/products?${params.toString()}`,
       );
-      return data;
+      return { products: data.data ?? [], total: data.total ?? 0 };
     },
     staleTime: 60 * 1000,
   });
@@ -233,7 +237,7 @@ export function useCreateProduct() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (product: Partial<AdminProduct>) => {
-      const { data } = await adminApi.post<AdminProduct>('/admin/products', product);
+      const { data } = await adminApi.post<AdminProduct>('/products', product);
       return data;
     },
     onSuccess: () => {
@@ -246,7 +250,7 @@ export function useUpdateProduct() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, ...product }: Partial<AdminProduct> & { id: number }) => {
-      const { data } = await adminApi.patch<AdminProduct>(`/admin/products/${id}`, product);
+      const { data } = await adminApi.patch<AdminProduct>(`/products/${id}`, product);
       return data;
     },
     onSuccess: () => {
@@ -259,7 +263,7 @@ export function useDeleteProduct() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: number) => {
-      await adminApi.delete(`/admin/products/${id}`);
+      await adminApi.delete(`/products/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
@@ -271,6 +275,7 @@ export function useImportProducts() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (formData: FormData) => {
+      // Import endpoint actually lives in the admin module.
       const { data } = await adminApi.post<ImportResult>('/admin/products/import', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -286,6 +291,7 @@ export function useBulkDiscount() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ ids, discount }: { ids: number[]; discount: number }) => {
+      // Bulk discount endpoint also lives in the admin module.
       const { data } = await adminApi.post('/admin/products/bulk-discount', { ids, discount });
       return data;
     },
@@ -297,11 +303,12 @@ export function useBulkDiscount() {
 
 // ─── Categories ───────────────────────────────────────────────────────────────
 
+// Categories live at /categories. Read is public, write requires admin role.
 export function useAdminCategories() {
   return useQuery<AdminCategory[]>({
     queryKey: ['admin', 'categories'],
     queryFn: async () => {
-      const { data } = await adminApi.get<AdminCategory[]>('/admin/categories');
+      const { data } = await adminApi.get<AdminCategory[]>('/categories');
       return data;
     },
     staleTime: 5 * 60 * 1000,
@@ -312,7 +319,7 @@ export function useReorderCategories() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (order: { id: number; sortOrder: number }[]) => {
-      const { data } = await adminApi.patch('/admin/categories/reorder', { order });
+      const { data } = await adminApi.patch('/categories/reorder', { order });
       return data;
     },
     onSuccess: () => {
@@ -332,6 +339,8 @@ interface OrderFilters {
   limit?: number;
 }
 
+// Backend returns {data, total, ...} — remap to {orders, total} so the page
+// component (which reads data.orders) keeps working without changes.
 export function useAdminOrders(filters: OrderFilters = {}) {
   const params = new URLSearchParams();
   if (filters.status) params.set('status', filters.status);
@@ -344,10 +353,10 @@ export function useAdminOrders(filters: OrderFilters = {}) {
   return useQuery<{ orders: AdminOrder[]; total: number }>({
     queryKey: ['admin', 'orders', filters],
     queryFn: async () => {
-      const { data } = await adminApi.get<{ orders: AdminOrder[]; total: number }>(
+      const { data } = await adminApi.get<{ data: AdminOrder[]; total: number }>(
         `/admin/orders?${params.toString()}`,
       );
-      return data;
+      return { orders: data.data ?? [], total: data.total ?? 0 };
     },
     staleTime: 30 * 1000,
   });
@@ -474,6 +483,7 @@ interface UserFilters {
   limit?: number;
 }
 
+// Backend returns {data, total, ...} — remap to {users, total}.
 export function useAdminUsers(filters: UserFilters = {}) {
   const params = new URLSearchParams();
   if (filters.role) params.set('role', filters.role);
@@ -484,10 +494,10 @@ export function useAdminUsers(filters: UserFilters = {}) {
   return useQuery<{ users: AdminUser[]; total: number }>({
     queryKey: ['admin', 'users', filters],
     queryFn: async () => {
-      const { data } = await adminApi.get<{ users: AdminUser[]; total: number }>(
+      const { data } = await adminApi.get<{ data: AdminUser[]; total: number }>(
         `/admin/users?${params.toString()}`,
       );
-      return data;
+      return { users: data.data ?? [], total: data.total ?? 0 };
     },
     staleTime: 2 * 60 * 1000,
   });
@@ -495,12 +505,15 @@ export function useAdminUsers(filters: UserFilters = {}) {
 
 // ─── Promo Codes ──────────────────────────────────────────────────────────────
 
+// Backend returns {data, total, ...} envelope — page expects a flat PromoCode[].
 export function useAdminPromoCodes() {
   return useQuery<PromoCode[]>({
     queryKey: ['admin', 'promo-codes'],
     queryFn: async () => {
-      const { data } = await adminApi.get<PromoCode[]>('/admin/promo-codes');
-      return data;
+      const { data } = await adminApi.get<{ data: PromoCode[]; total: number }>(
+        '/admin/promo-codes',
+      );
+      return data.data ?? [];
     },
     staleTime: 2 * 60 * 1000,
   });
@@ -546,11 +559,12 @@ export function useDeletePromoCode() {
 
 // ─── FAQ ──────────────────────────────────────────────────────────────────────
 
+// FAQ lives at /admin/faq (NOT /admin/content/faq — that prefix doesn't exist).
 export function useAdminFaq() {
   return useQuery<FaqItem[]>({
     queryKey: ['admin', 'faq'],
     queryFn: async () => {
-      const { data } = await adminApi.get<FaqItem[]>('/admin/content/faq');
+      const { data } = await adminApi.get<FaqItem[]>('/admin/faq');
       return data;
     },
     staleTime: 5 * 60 * 1000,
@@ -561,7 +575,7 @@ export function useCreateFaqItem() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (item: Partial<FaqItem>) => {
-      const { data } = await adminApi.post<FaqItem>('/admin/content/faq', item);
+      const { data } = await adminApi.post<FaqItem>('/admin/faq', item);
       return data;
     },
     onSuccess: () => {
@@ -574,7 +588,7 @@ export function useUpdateFaqItem() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, ...item }: Partial<FaqItem> & { id: number }) => {
-      const { data } = await adminApi.patch<FaqItem>(`/admin/content/faq/${id}`, item);
+      const { data } = await adminApi.patch<FaqItem>(`/admin/faq/${id}`, item);
       return data;
     },
     onSuccess: () => {
@@ -587,7 +601,7 @@ export function useDeleteFaqItem() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: number) => {
-      await adminApi.delete(`/admin/content/faq/${id}`);
+      await adminApi.delete(`/admin/faq/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'faq'] });
@@ -595,11 +609,17 @@ export function useDeleteFaqItem() {
   });
 }
 
+// Backend has no bulk-reorder endpoint for FAQ, so we fan out to PATCH /admin/faq/:id.
+// Drag & drop is rare, the FAQ list is small — N parallel requests are fine.
 export function useReorderFaq() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (order: { id: number; sortOrder: number }[]) => {
-      await adminApi.patch('/admin/content/faq/reorder', { order });
+      await Promise.all(
+        order.map((item) =>
+          adminApi.patch(`/admin/faq/${item.id}`, { sortOrder: item.sortOrder }),
+        ),
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'faq'] });
@@ -609,11 +629,12 @@ export function useReorderFaq() {
 
 // ─── Banners ──────────────────────────────────────────────────────────────────
 
+// Banners live at /admin/banners (NOT /admin/content/banners).
 export function useAdminBanners() {
   return useQuery<Banner[]>({
     queryKey: ['admin', 'banners'],
     queryFn: async () => {
-      const { data } = await adminApi.get<Banner[]>('/admin/content/banners');
+      const { data } = await adminApi.get<Banner[]>('/admin/banners');
       return data;
     },
     staleTime: 5 * 60 * 1000,
@@ -624,7 +645,7 @@ export function useCreateBanner() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (banner: Partial<Banner>) => {
-      const { data } = await adminApi.post<Banner>('/admin/content/banners', banner);
+      const { data } = await adminApi.post<Banner>('/admin/banners', banner);
       return data;
     },
     onSuccess: () => {
@@ -637,7 +658,7 @@ export function useUpdateBanner() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, ...banner }: Partial<Banner> & { id: number }) => {
-      const { data } = await adminApi.patch<Banner>(`/admin/content/banners/${id}`, banner);
+      const { data } = await adminApi.patch<Banner>(`/admin/banners/${id}`, banner);
       return data;
     },
     onSuccess: () => {
@@ -650,7 +671,7 @@ export function useDeleteBanner() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: number) => {
-      await adminApi.delete(`/admin/content/banners/${id}`);
+      await adminApi.delete(`/admin/banners/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'banners'] });
