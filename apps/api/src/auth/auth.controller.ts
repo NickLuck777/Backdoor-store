@@ -58,6 +58,10 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Current user' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   getMe(@Request() req: Express.Request & { user: any }) {
-    return req.user;
+    // Strip the password hash before returning. The JWT strategy hands us
+    // the full Prisma User row, which would otherwise leak the bcrypt hash
+    // to anyone who can call /auth/me with their own valid token.
+    const { password, ...safe } = req.user ?? {};
+    return safe;
   }
 }

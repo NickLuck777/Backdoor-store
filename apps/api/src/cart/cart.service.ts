@@ -110,10 +110,20 @@ export class CartService {
     userId: number | undefined,
     sessionId: string,
     region: Region,
+    explicitItems?: Array<{ productId: number; quantity: number }>,
   ) {
-    const cart = await this.getCart(userId, sessionId);
+    // Frontend cart lives in Zustand/localStorage, not in Redis. When the
+    // client passes its items explicitly, use them — that's the real source
+    // of truth for the storefront. Otherwise fall back to the Redis cart.
+    let items: Array<{ productId: number; quantity: number }>;
+    if (explicitItems && explicitItems.length > 0) {
+      items = explicitItems.map(({ productId, quantity }) => ({ productId, quantity }));
+    } else {
+      const cart = await this.getCart(userId, sessionId);
+      items = cart.items.map((item) => ({ productId: item.productId, quantity: item.quantity }));
+    }
 
-    if (cart.items.length === 0) {
+    if (items.length === 0) {
       return {
         items: [],
         cards: [],
@@ -124,9 +134,6 @@ export class CartService {
       };
     }
 
-    return this.smartCartService.calculateFromIds(
-      cart.items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
-      region,
-    );
+    return this.smartCartService.calculateFromIds(items, region);
   }
 }

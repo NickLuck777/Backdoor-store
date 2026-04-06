@@ -2,28 +2,47 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Gamepad2, Search, Star, CreditCard, User } from 'lucide-react';
+import { X, Gamepad2, Search, Star, CreditCard, User, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RegionSwitcher } from '@/components/catalog/RegionSwitcher';
 import { useRegionStore } from '@/lib/store/regionStore';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export interface MobileMenuProps {
   open: boolean;
   onClose: () => void;
 }
 
-const NAV_LINKS = [
+const BASE_LINKS = [
   { href: '/catalog', label: 'Каталог', icon: Gamepad2 },
   { href: '/search', label: 'Поиск', icon: Search },
   { href: '/catalog?type=SUBSCRIPTION', label: 'PS Plus', icon: Star },
   { href: '/catalog?type=TOPUP_CARD', label: 'Пополнение', icon: CreditCard },
-  { href: '/auth/login', label: 'Войти', icon: User },
 ];
 
 export function MobileMenu({ open, onClose }: MobileMenuProps) {
+  const router = useRouter();
   const region = useRegionStore((state) => state.region);
   const setRegion = useRegionStore((state) => state.setRegion);
+  const { isAuthenticated, user, logout } = useAuth();
+
+  const navLinks = React.useMemo(() => {
+    if (isAuthenticated) {
+      return [
+        ...BASE_LINKS,
+        { href: '/account', label: user?.email?.split('@')[0] ?? 'Профиль', icon: User },
+      ];
+    }
+    return [...BASE_LINKS, { href: '/auth/login', label: 'Войти', icon: User }];
+  }, [isAuthenticated, user?.email]);
+
+  const handleLogout = () => {
+    logout();
+    onClose();
+    router.push('/');
+  };
 
   // Lock scroll
   React.useEffect(() => {
@@ -81,7 +100,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
             {/* Navigation */}
             <nav className="flex-1 overflow-y-auto py-4 px-3">
               <ul className="flex flex-col gap-1">
-                {NAV_LINKS.map((link, i) => {
+                {navLinks.map((link, i) => {
                   const Icon = link.icon;
                   return (
                     <motion.li
@@ -101,11 +120,34 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
                         )}
                       >
                         <Icon size={20} className="flex-shrink-0" />
-                        {link.label}
+                        <span className="truncate">{link.label}</span>
                       </Link>
                     </motion.li>
                   );
                 })}
+                {isAuthenticated && (
+                  <motion.li
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      delay: 0.05 + navLinks.length * 0.05,
+                      duration: 0.3,
+                      ease: [0.4, 0, 0.2, 1],
+                    }}
+                  >
+                    <button
+                      onClick={handleLogout}
+                      className={cn(
+                        'w-full flex items-center gap-3 px-4 py-3.5 rounded-xl',
+                        'text-base font-semibold text-[#FF8080]',
+                        'hover:bg-white/8 transition-all duration-200',
+                      )}
+                    >
+                      <LogOut size={20} className="flex-shrink-0" />
+                      Выйти
+                    </button>
+                  </motion.li>
+                )}
               </ul>
             </nav>
 

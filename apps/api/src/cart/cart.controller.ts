@@ -13,12 +13,10 @@ import {
   ApiTags,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { CartService } from './cart.service';
 import { AddCartItemDto, UpdateCartItemDto, CalculateCartDto } from './cart.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { Public } from '../common/decorators/public.decorator';
+import { OptionalJwtAuthGuard } from '../common/guards/optional-jwt-auth.guard';
 
 function getSessionId(req: any): string {
   return req.cookies?.sessionId ?? req.headers['x-session-id'] ?? 'anonymous';
@@ -26,10 +24,10 @@ function getSessionId(req: any): string {
 
 @ApiTags('cart')
 @Controller('cart')
+@UseGuards(OptionalJwtAuthGuard)
 export class CartController {
   constructor(private cartService: CartService) {}
 
-  @Public()
   @Get()
   @ApiOperation({ summary: 'Get current cart' })
   @ApiResponse({ status: 200, description: 'Cart contents' })
@@ -39,7 +37,6 @@ export class CartController {
     return this.cartService.getCart(userId, sessionId);
   }
 
-  @Public()
   @Post('items')
   @ApiOperation({ summary: 'Add item to cart' })
   @ApiResponse({ status: 201, description: 'Item added' })
@@ -49,7 +46,6 @@ export class CartController {
     return this.cartService.addItem(userId, sessionId, dto.productId, dto.quantity);
   }
 
-  @Public()
   @Patch('items/:id')
   @ApiOperation({ summary: 'Update cart item quantity' })
   @ApiResponse({ status: 200, description: 'Item updated' })
@@ -63,7 +59,6 @@ export class CartController {
     return this.cartService.updateItem(userId, sessionId, itemId, dto.quantity);
   }
 
-  @Public()
   @Delete('items/:id')
   @ApiOperation({ summary: 'Remove item from cart' })
   @ApiResponse({ status: 200, description: 'Item removed' })
@@ -73,7 +68,6 @@ export class CartController {
     return this.cartService.removeItem(userId, sessionId, itemId);
   }
 
-  @Public()
   @Delete()
   @ApiOperation({ summary: 'Clear cart' })
   @ApiResponse({ status: 200, description: 'Cart cleared' })
@@ -84,13 +78,17 @@ export class CartController {
     return { cleared: true };
   }
 
-  @Public()
   @Post('calculate')
   @ApiOperation({ summary: 'Calculate smart cart (denomination breakdown)' })
   @ApiResponse({ status: 200, description: 'Smart cart calculation result' })
   calculate(@Request() req: any, @Body() dto: CalculateCartDto) {
     const userId = req.user?.id;
     const sessionId = getSessionId(req);
-    return this.cartService.calculateSmartCart(userId, sessionId, dto.region);
+    return this.cartService.calculateSmartCart(
+      userId,
+      sessionId,
+      dto.region,
+      dto.items,
+    );
   }
 }

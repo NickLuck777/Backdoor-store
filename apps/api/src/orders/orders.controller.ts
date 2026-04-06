@@ -16,14 +16,14 @@ import {
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './orders.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { Public } from '../common/decorators/public.decorator';
+import { OptionalJwtAuthGuard } from '../common/guards/optional-jwt-auth.guard';
 
 @ApiTags('orders')
 @Controller('orders')
+@UseGuards(OptionalJwtAuthGuard)
 export class OrdersController {
   constructor(private ordersService: OrdersService) {}
 
-  @Public()
   @Post()
   @ApiOperation({ summary: 'Create order from cart' })
   @ApiResponse({ status: 201, description: 'Order created' })
@@ -33,7 +33,6 @@ export class OrdersController {
     return this.ordersService.create(dto, userId);
   }
 
-  @Public()
   @Get(':orderNumber')
   @ApiOperation({ summary: 'Get order status by order number (public)' })
   @ApiResponse({ status: 200, description: 'Order found' })

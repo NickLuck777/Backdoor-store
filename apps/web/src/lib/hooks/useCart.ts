@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
+import { useCartStore } from '@/lib/store/cartStore';
 import type { CartItem, SmartCartResult, Region } from '@/types';
 
 // SessionId — generate once, persist in localStorage
@@ -116,19 +117,35 @@ export function useClearCart() {
   });
 }
 
-// POST /cart/calculate — smart denomination breakdown
+// POST /cart/calculate — smart denomination breakdown.
+// The cart lives in Zustand/localStorage on the client; the backend Redis
+// cart is never populated by the storefront. So we send our local items in
+// the request body and the backend calculates from them directly.
 export function useSmartCart(region?: Region) {
+  const items = useCartStore((state) => state.items);
+  // Stable cache key — productId + quantity is what actually affects the calc.
+  const itemsKey = items
+    .map((i) => `${i.productId}x${i.quantity}`)
+    .join('|');
+
   return useQuery<SmartCartResult>({
-    queryKey: ['smart-cart', region],
+    queryKey: ['smart-cart', region, itemsKey],
     queryFn: async () => {
+      const payload = {
+        region,
+        items: items.map((i) => ({
+          productId: i.productId,
+          quantity: i.quantity,
+        })),
+      };
       const { data } = await api.post<SmartCartResult>(
         '/cart/calculate',
-        { region },
+        payload,
         { headers: cartHeaders() },
       );
       return data;
     },
     staleTime: 30 * 1000,
-    enabled: !!region,
+    enabled: !!region && items.length > 0,
   });
 }
